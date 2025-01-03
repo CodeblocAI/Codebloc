@@ -1,0 +1,54 @@
+import re
+
+class CodeLanguageDetector:
+    def __init__(self):
+        self.languages = {
+            "Python": {"keywords": ["def ", "import ", "print(", "lambda"], "extensions": [".py"]},
+            "Rust": {"keywords": ["fn ", "let ", "use ", "mod "], "extensions": [".rs"]},
+            "Go": {"keywords": ["package ", "func ", "import ", "var "], "extensions": [".go"]},
+            "JavaScript": {"keywords": ["function ", "let ", "const ", "import "], "extensions": [".js", ".jsx"]},
+            "TypeScript": {"keywords": ["function ", "let ", "const ", "import ", "interface"], "extensions": [".ts", ".tsx"]},
+            "Java": {"keywords": ["class ", "public static void main", "import ", "System.out.println"], "extensions": [".java"]},
+            "C++": {"keywords": ["#include", "int main", "using namespace", "std::cout"], "extensions": [".cpp", ".hpp"]},
+            "Ruby": {"keywords": ["def ", "puts ", "require ", "end"], "extensions": [".rb"]},
+            "PHP": {"keywords": ["<?php", "echo ", "function ", "$"], "extensions": [".php"]},
+            "HTML": {"keywords": ["<html>", "<body>", "<div>", "<script>", "<!DOCTYPE"], "extensions": [".html", ".htm"]},
+            "CSS": {"keywords": ["{", "}", "font-family", "background-color", "color"], "extensions": [".css"]},
+            "Swift": {"keywords": ["func ", "import ", "let ", "var "], "extensions": [".swift"]},
+            "Kotlin": {"keywords": ["fun ", "val ", "var ", "import "], "extensions": [".kt", ".kts"]},
+        }
+
+    def detect_language(self, code_snippet, file_extension=None):
+        """Detect the language based on code snippet or file extension."""
+        
+        # Check for language by file extension
+        if file_extension:
+            for language, data in self.languages.items():
+                if file_extension in data["extensions"]:
+                    return language
+        
+        # Check for language based on keywords in the code snippet
+        for language, data in self.languages.items():
+            if any(keyword in code_snippet for keyword in data["keywords"]):
+                return language
+        
+        return "Unknown"
+
+# Example Usage
+detector = CodeLanguageDetector()
+
+# Sample code snippets
+python_code = "def greet(name):\n    return f'Hello, {name}'"
+rust_code = "fn main() {\n    println!(\"Hello, world!\");"
+go_code = "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello, World!\")"
+html_code = "<html><body><h1>Hello, World!</h1></body></html>"
+
+# Detect language based on code snippet
+print("Detected Language (Python Code):", detector.detect_language(python_code))
+print("Detected Language (Rust Code):", detector.detect_language(rust_code))
+print("Detected Language (Go Code):", detector.detect_language(go_code))
+print("Detected Language (HTML Code):", detector.detect_language(html_code))
+
+# Detect language based on file extension
+print("Detected Language (Python File):", detector.detect_language("", file_extension=".py"))
+print("Detected Language (Go File):", detector.detect_language("", file_extension=".go"))
