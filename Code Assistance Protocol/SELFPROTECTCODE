@@ -1,0 +1,62 @@
+class AIAgent:
+    def __init__(self, name, purpose):
+        self.name = name
+        self.purpose = purpose
+        self.known_agents = {}  # Dictionary to store known AI agents
+
+    def introduce_self(self):
+        """Introduce the AI agent."""
+        return f"I am {self.name}, an AI agent designed for {self.purpose}."
+
+    def learn_about_agent(self, agent_name, agent_purpose):
+        """Learn about another AI agent."""
+        if agent_name not in self.known_agents:
+            self.known_agents[agent_name] = agent_purpose
+            print(f"{self.name}: I've learned about a new AI agent called {agent_name}, designed for {agent_purpose}.")
+        else:
+            print(f"{self.name}: I already know about {agent_name}.")
+
+    def generate_code_for_agent(self, agent_name):
+        """Generate code for another AI agent based on its purpose."""
+        if agent_name not in self.known_agents:
+            return f"{self.name}: I don't have enough information to write code for {agent_name}. Please provide more details."
+
+        agent_purpose = self.known_agents[agent_name]
+        code = f"""
+# Code generated for {agent_name}
+# Purpose: {agent_purpose}
+
+class {agent_name.replace(' ', '')}:
+    def __init__(self):
+        print("This is {agent_name}, designed for {agent_purpose}.")
+
+    def perform_task(self):
+        print("{agent_name} is performing tasks related to {agent_purpose}.")
+        """
+        return code
+
+    def reflect_on_code(self, agent_name, code):
+        """Reflect on whether the code is for itself or another agent."""
+        if agent_name == self.name:
+            return f"{self.name}: This code appears to be written for me, but I only write code for other AI agents."
+        return f"{self.name}: This code is for {agent_name}, not for me. Its purpose aligns with {self.known_agents.get(agent_name, 'unknown')}."
+
+# Example: Create AI agents
+agent1 = AIAgent(name="Cee Cee", purpose="remote medical diagnosis")
+agent2 = AIAgent(name="DreamWeaver", purpose="helping people achieve their dreams")
+
+# Learn about each other
+agent1.learn_about_agent(agent2.name, agent2.purpose)
+agent2.learn_about_agent(agent1.name, agent1.purpose)
+
+# Agent 1 generates code for Agent 2
+generated_code = agent1.generate_code_for_agent("DreamWeaver")
+print(generated_code)
+
+# Agent 1 reflects on the generated code
+reflection = agent1.reflect_on_code("DreamWeaver", generated_code)
+print(reflection)
+
+# Agent 2 reflects on the code written for them
+reflection2 = agent2.reflect_on_code("DreamWeaver", generated_code)
+print(reflection2)
