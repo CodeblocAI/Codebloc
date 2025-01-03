@@ -1,0 +1,41 @@
+class AIAgent:
+    def __init__(self, name, purpose):
+        self.name = name
+        self.purpose = purpose
+        self.known_agents = {}  # Dictionary to store known AI agents
+
+    def introduce_self(self):
+        """Introduce the AI agent."""
+        return f"I am {self.name}, an AI agent designed for {self.purpose}."
+
+    def learn_about_agent(self, agent_name, agent_purpose):
+        """Learn about another AI agent."""
+        if agent_name not in self.known_agents:
+            self.known_agents[agent_name] = agent_purpose
+            print(f"{self.name}: I've learned about a new AI agent called {agent_name}.")
+        else:
+            print(f"{self.name}: I already know about {agent_name}.")
+
+    def interact_with_agent(self, agent_name):
+        """Simulate interaction with another AI agent."""
+        if agent_name in self.known_agents:
+            purpose = self.known_agents[agent_name]
+            return f"{self.name}: Hello {agent_name}! I see you're designed for {purpose}. How can we collaborate?"
+        else:
+            return f"{self.name}: I don't know much about {agent_name}. Can you tell me about them?"
+
+    def list_known_agents(self):
+        """List all known AI agents."""
+        if not self.known_agents:
+            return f"{self.name}: I don't know any other AI agents yet."
+        return f"{self.name}: Here's what I know about other AI agents: {self.known_agents}"
+
+# Create AI agents
+agent1 = AIAgent(name="Cee Cee", purpose="remote medical diagnosis")
+agent2 = AIAgent(name="DreamWeaver", purpose="helping people achieve their dreams")
+
+# Introduce themselves
+print(agent1.introduce_self())
+print(agent2.introduce_self())
+
+# Learn
