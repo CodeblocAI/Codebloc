@@ -1,0 +1,96 @@
+class CodingAssistantAI:
+    def __init__(self, name="CodeHelper", expertise="general programming"):
+        self.name = name
+        self.expertise = expertise
+
+    def introduce_self(self):
+        """Introduce the AI assistant."""
+        return f"I am {self.name}, an AI assistant specialized in {self.expertise}. I can help you code faster by suggesting improvements, generating code snippets, and debugging issues."
+
+    def analyze_request(self, user_request):
+        """Analyze the user's request and decide how to assist."""
+        if "generate" in user_request:
+            return "generate_code"
+        elif "debug" in user_request:
+            return "debug_code"
+        elif "explain" in user_request:
+            return "explain_code"
+        else:
+            return "general_help"
+
+    def generate_code_snippet(self, task_description):
+        """Generate boilerplate code for a given task description."""
+        snippets = {
+            "REST API": """
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+@app.route('/api', methods=['GET'])
+def api_endpoint():
+    return jsonify({"message": "Hello, World!"})
+
+if __name__ == '__main__':
+    app.run(debug=True)
+            """,
+            "sorting algorithm": """
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n-i-1):
+            if arr[j] > arr[j+1]:
+                arr[j], arr[j+1] = arr[j+1], arr[j]
+    return arr
+            """,
+        }
+        return snippets.get(task_description, "Sorry, I don't have a snippet for that task yet.")
+
+    def debug_code(self, code):
+        """Provide debugging hints for the code."""
+        if "SyntaxError" in code:
+            return "Check for missing colons, parentheses, or indentation issues."
+        elif "NameError" in code:
+            return "Make sure all variables and functions are defined before use."
+        elif "TypeError" in code:
+            return "Verify that the operations are being performed on compatible data types."
+        else:
+            return "I'm not sure of the specific issue. Consider running the code and sharing the error output."
+
+    def explain_code(self, code):
+        """Provide a high-level explanation of the code."""
+        if "def" in code and "(" in code:
+            return "This is a function definition. It encapsulates a reusable block of code."
+        elif "for" in code and "in" in code:
+            return "This is a loop that iterates over a sequence (like a list or range)."
+        elif "if" in code:
+            return "This is a conditional statement that checks if a condition is True."
+        else:
+            return "This code seems unfamiliar. Can you provide more context?"
+
+    def assist(self, user_request, additional_info=""):
+        """Provide assistance based on the user's request."""
+        task = self.analyze_request(user_request)
+        if task == "generate_code":
+            return self.generate_code_snippet(additional_info)
+        elif task == "debug_code":
+            return self.debug_code(additional_info)
+        elif task == "explain_code":
+            return self.explain_code(additional_info)
+        else:
+            return "I'm here to help! Can you provide more details about what you need?"
+
+# Example interaction
+assistant = CodingAssistantAI()
+
+# Introduction
+print(assistant.introduce_self())
+
+# User requests
+print("\nRequest: 'Generate code for a REST API'")
+print(assistant.assist("generate code", "REST API"))
+
+print("\nRequest: 'Explain this code snippet: def add(a, b): return a + b'")
+print(assistant.assist("explain code", "def add(a, b): return a + b"))
+
+print("\nRequest: 'Debug this code: print(unknown_variable)'")
+print(assistant.assist("debug code", "print(unknown_variable)"))
