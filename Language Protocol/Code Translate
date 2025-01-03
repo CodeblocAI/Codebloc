@@ -1,0 +1,115 @@
+import re
+
+class CodeTranslator:
+    def __init__(self):
+        self.language_patterns = {
+            "Python": {
+                "function_def": r"def (\w+)\((.*?)\):",  # Python function definition
+                "variable_decl": r"(\w+) = ",  # Variable declaration
+                "for_loop": r"for (\w+) in range\((.*?)\):",  # Python for-loop
+                "print": r"print\((.*?)\)",  # Print function
+            },
+            "Go": {
+                "function_def": r"func (\w+)\((.*?)\) \{",  # Go function definition
+                "variable_decl": r"(\w+) := ",  # Go variable declaration
+                "for_loop": r"for (\w+) := 0; \w+ < (\w+); \w+\+\+ \{",  # Go for-loop
+                "print": r"fmt.Println\((.*?)\)",  # Go print function
+            }
+        }
+
+    def translate(self, code, from_language, to_language):
+        """Translate code from one language to another."""
+        if from_language == to_language:
+            return code  # No need to translate if same language
+
+        # Translate function definitions
+        code = self.translate_pattern(code, from_language, to_language, "function_def")
+        
+        # Translate variable declarations
+        code = self.translate_pattern(code, from_language, to_language, "variable_decl")
+        
+        # Translate for-loops
+        code = self.translate_pattern(code, from_language, to_language, "for_loop")
+        
+        # Translate print statements
+        code = self.translate_pattern(code, from_language, to_language, "print")
+        
+        return code
+    
+    def translate_pattern(self, code, from_language, to_language, pattern_name):
+        """Translate a specific pattern between languages."""
+        from_pattern = self.language_patterns[from_language].get(pattern_name, "")
+        to_pattern = self.language_patterns[to_language].get(pattern_name, "")
+        
+        if not from_pattern or not to_pattern:
+            return code  # No translation for this pattern
+        
+        # Regex replacement
+        return re.sub(from_pattern, lambda match: self.replace_match(match, pattern_name, from_language, to_language), code)
+    
+    def replace_match(self, match, pattern_name, from_language, to_language):
+        """Replace a regex match with the corresponding translated code."""
+        if pattern_name == "function_def":
+            func_name = match.group(1)
+            params = match.group(2)
+            if from_language == "Python" and to_language == "Go":
+                return f"func {func_name}({params}) {{"
+            elif from_language == "Go" and to_language == "Python":
+                return f"def {func_name}({params}):"
+        
+        elif pattern_name == "variable_decl":
+            var_name = match.group(1)
+            if from_language == "Python" and to_language == "Go":
+                return f"{var_name} :="
+            elif from_language == "Go" and to_language == "Python":
+                return f"{var_name} ="
+        
+        elif pattern_name == "for_loop":
+            loop_var = match.group(1)
+            limit = match.group(2)
+            if from_language == "Python" and to_language == "Go":
+                return f"for {loop_var} := 0; {loop_var} < {limit}; {loop_var}++ {{"
+            elif from_language == "Go" and to_language == "Python":
+                return f"for {loop_var} in range({limit}):"
+        
+        elif pattern_name == "print":
+            expression = match.group(1)
+            if from_language == "Python" and to_language == "Go":
+                return f"fmt.Println({expression})"
+            elif from_language == "Go" and to_language == "Python":
+                return f"print({expression})"
+        
+        return match.group(0)
+
+# Example Usage
+translator = CodeTranslator()
+
+# Python code
+python_code = """
+def greet(name):
+    print(f"Hello, {name}")
+    
+for i in range(5):
+    greet(i)
+"""
+
+# Translate Python to Go
+go_code = translator.translate(python_code, "Python", "Go")
+print("Go Code:")
+print(go_code)
+
+# Go code (converted from Python)
+go_code = """
+func greet(name string) {
+    fmt.Println("Hello, " + name)
+}
+
+for i := 0; i < 5; i++ {
+    greet(i)
+}
+"""
+
+# Translate Go to Python
+python_code = translator.translate(go_code, "Go", "Python")
+print("\nPython Code:")
+print(python_code)
