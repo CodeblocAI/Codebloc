@@ -1,0 +1,64 @@
+import tweepy
+from flask import Flask, request, jsonify
+import random
+
+# Twitter API configuration
+TWITTER_API_KEY = "your_twitter_api_key"
+TWITTER_API_SECRET = "your_twitter_api_secret"
+TWITTER_ACCESS_TOKEN = "your_access_token"
+TWITTER_ACCESS_SECRET = "your_access_secret"
+
+# Tweepy authentication
+auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
+auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_SECRET)
+twitter_api = tweepy.API(auth)
+
+# Flask app for chatbot
+app = Flask(__name__)
+
+# Responses database (example)
+responses = {
+    "greeting": ["Hello! How can I help you today?", "Hi there! What's on your mind?"],
+    "fallback": ["I'm not sure I understand. Could you rephrase that?", "Sorry, I don't have an answer for that yet."],
+}
+
+# AI agent functionality
+class AIAgent:
+    def __init__(self, name="AI Agent"):
+        self.name = name
+
+    def handle_twitter_mention(self, mention):
+        response = f"Hi @{mention.user.screen_name}, thanks for reaching out! How can I assist you today?"
+        twitter_api.update_status(status=response, in_reply_to_status_id=mention.id)
+
+    def respond_to_message(self, user_message):
+        if "hello" in user_message.lower():
+            return random.choice(responses["greeting"])
+        return random.choice(responses["fallback"])
+
+# Instantiate the AI agent
+agent = AIAgent()
+
+# Twitter interaction
+def check_mentions():
+    mentions = twitter_api.mentions_timeline(count=10)
+    for mention in mentions:
+        print(f"Received mention from @{mention.user.screen_name}: {mention.text}")
+        agent.handle_twitter_mention(mention)
+
+# Chatbot interaction
+@app.route("/chat", methods=["POST"])
+def chat():
+    user_input = request.json.get("message", "")
+    if not user_input:
+        return jsonify({"error": "Message cannot be empty"}), 400
+
+    response = agent.respond_to_message(user_input)
+    return jsonify({"response": response})
+
+# Run Flask app
+if __name__ == "__main__":
+    print("AI Agent is running...")
+    # Uncomment the following line to check Twitter mentions periodically
+    # check_mentions()
+    app.run(host="0.0.0.0", port=5000)
