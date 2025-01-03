@@ -1,0 +1,88 @@
+import traceback
+
+class SelfDebuggingAI:
+    def __init__(self, name="DebuggerBot"):
+        self.name = name
+        self.logs = []  # Log to track actions and errors in real time
+
+    def log(self, message, error=False):
+        """Log actions and errors with timestamps."""
+        import datetime
+        entry_type = "ERROR" if error else "INFO"
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        log_entry = f"[{entry_type} - {timestamp}] {message}"
+        self.logs.append(log_entry)
+        if error:
+            print(f"🔴 {log_entry}")
+        else:
+            print(f"🟢 {log_entry}")
+
+    def execute_task(self, task_function, *args, **kwargs):
+        """Execute a task and handle errors in real time."""
+        try:
+            self.log(f"Executing task: {task_function.__name__} with args {args} and kwargs {kwargs}")
+            result = task_function(*args, **kwargs)
+            self.log(f"Task {task_function.__name__} completed successfully. Result: {result}")
+            return result
+        except Exception as e:
+            error_message = f"Task {task_function.__name__} failed with error: {str(e)}"
+            self.log(error_message, error=True)
+            self.debug_error(e, task_function, args, kwargs)
+            return None
+
+    def debug_error(self, exception, task_function, args, kwargs):
+        """Analyze the error and suggest potential fixes."""
+        self.log(f"Debugging error: {str(exception)}", error=True)
+        error_trace = traceback.format_exc()
+        self.log(f"Stack trace:\n{error_trace}", error=True)
+
+        # Basic debugging suggestions
+        if isinstance(exception, SyntaxError):
+            self.log("Suggestion: Check the syntax of the code. Ensure proper indentation, colons, and parentheses.")
+        elif isinstance(exception, NameError):
+            self.log("Suggestion: Check if all variables and functions are defined before use.")
+        elif isinstance(exception, TypeError):
+            self.log("Suggestion: Verify that operations are performed on compatible data types.")
+        elif isinstance(exception, IndexError):
+            self.log("Suggestion: Ensure indexes are within the range of the data structure.")
+        elif isinstance(exception, KeyError):
+            self.log("Suggestion: Confirm the key exists in the dictionary.")
+        else:
+            self.log("Suggestion: This error is unfamiliar. Consider checking the full traceback for more details.")
+
+        # Attempt recovery if possible
+        self.log("Attempting to recover from the error...")
+        try:
+            recovery_result = task_function(*args, **kwargs)
+            self.log(f"Recovery successful for task {task_function.__name__}. Result: {recovery_result}")
+        except Exception as recovery_error:
+            self.log(f"Recovery attempt failed: {str(recovery_error)}", error=True)
+
+    def review_logs(self):
+        """Review the logs to analyze the AI's performance."""
+        self.log("Reviewing logs...")
+        return "\n".join(self.logs)
+
+
+# Example tasks
+def example_task_success(x, y):
+    """A sample task that succeeds."""
+    return x + y
+
+def example_task_failure(x, y):
+    """A sample task that fails."""
+    return x / y  # Will raise ZeroDivisionError if y is 0
+
+
+# Example usage
+ai = SelfDebuggingAI()
+
+# Successful task
+ai.execute_task(example_task_success, 5, 3)
+
+# Task that fails (division by zero)
+ai.execute_task(example_task_failure, 5, 0)
+
+# Review logs
+print("\n=== Logs ===")
+print(ai.review_logs())
