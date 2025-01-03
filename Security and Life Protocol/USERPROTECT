@@ -1,0 +1,55 @@
+import re
+
+class SuicideDetectionAI:
+    def __init__(self):
+        # Keywords and phrases associated with suicidal ideation
+        self.suicide_keywords = [
+            "suicide", "kill myself", "end my life", "take my life", "no hope", "i'm worthless", 
+            "i'm not good enough", "i don't want to live", "give up", "feeling hopeless", 
+            "death seems better", "i'm in pain", "no way out"
+        ]
+        self.helpline_resources = {
+            "USA": "National Suicide Prevention Lifeline: 1-800-273-TALK (1-800-273-8255)",
+            "UK": "Samaritans: 116 123",
+            "Canada": "Crisis Services Canada: 1-833-456-4566",
+            "Australia": "Lifeline Australia: 13 11 14",
+            "International": "Visit https://www.suicide.org/international-suicide-hotlines.html for worldwide numbers."
+        }
+
+    def detect_suicidal_ideation(self, message, country="USA"):
+        """Detects signs of suicidal ideation and provides resources for help."""
+        # Convert message to lowercase for better matching
+        message = message.lower()
+        
+        # Search for any suicidal keywords in the message
+        if any(keyword in message for keyword in self.suicide_keywords):
+            return self.offer_help(country)
+        else:
+            return "No immediate signs of distress detected."
+
+    def offer_help(self, country):
+        """Provide appropriate helpline based on the country."""
+        if country in self.helpline_resources:
+            return f"Warning: Signs of suicidal ideation detected.\nPlease reach out for support. Helpline: {self.helpline_resources[country]}"
+        else:
+            return f"Warning: Signs of suicidal ideation detected.\nPlease reach out for support. Helpline: {self.helpline_resources['International']}"
+
+# Example Usage
+detector = SuicideDetectionAI()
+
+# Example message
+message = "I feel like there's no point in living anymore. I just want to end it all."
+
+# Detect if the message shows signs of suicidal ideation and provide help
+response = detector.detect_suicidal_ideation(message, country="USA")
+print(response)
+
+# Example for UK
+message_uk = "I'm feeling hopeless, and I don't think I can handle the pain anymore."
+response_uk = detector.detect_suicidal_ideation(message_uk, country="UK")
+print(response_uk)
+
+# Example with no signs of suicidal ideation
+message_normal = "I'm just having a bad day, but I'll get through it."
+response_normal = detector.detect_suicidal_ideation(message_normal)
+print(response_normal)
