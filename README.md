@@ -10,6 +10,9 @@ With Codebloc, you can create AI-powered tools, workflows, and agents. From real
 # How does Codebloc integrate with APIs and providers?
 Codebloc seamlessly integrates with leading AI providers like OpenAI, Claude, Gemini, and more. You can connect APIs to your workflows with just a few lines of code.
 
+# What is the Codebloc Protocol System?
+Codebloc's protocol system allows for seemless interactions between AI and User, User and User, and AI and AI. This means no matter what your goals are with AI and Code, Codebloc can help!
+
 # Can I use Codebloc with blockchain platforms like Solana?
 Yes! Codebloc supports integration with Solana, enabling AI-powered smart contracts, on-chain automation, and decentralized applications.
 
