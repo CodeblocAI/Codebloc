@@ -1,0 +1,30 @@
+🟢 [INFO - 2025-01-02 14:00:00] Executing task: example_task_success with args (5, 3) and kwargs {}
+🟢 [INFO - 2025-01-02 14:00:00] Task example_task_success completed successfully. Result: 8
+
+🟢 [INFO - 2025-01-02 14:00:00] Executing task: example_task_failure with args (5, 0) and kwargs {}
+🔴 [ERROR - 2025-01-02 14:00:00] Task example_task_failure failed with error: division by zero
+🔴 [ERROR - 2025-01-02 14:00:00] Debugging error: division by zero
+🔴 [ERROR - 2025-01-02 14:00:00] Stack trace:
+Traceback (most recent call last):
+  File "self_debugging_ai.py", line 23, in execute_task
+    result = task_function(*args, **kwargs)
+  File "self_debugging_ai.py", line 60, in example_task_failure
+    return x / y
+ZeroDivisionError: division by zero
+
+🔴 [ERROR - 2025-01-02 14:00:00] Suggestion: Verify that operations are performed on compatible data types.
+🟢 [INFO - 2025-01-02 14:00:00] Attempting to recover from the error...
+🔴 [ERROR - 2025-01-02 14:00:00] Recovery attempt failed: division by zero
+
+=== Logs ===
+[INFO - 2025-01-02 14:00:00] Executing task: example_task_success with args (5, 3) and kwargs {}
+[INFO - 2025-01-02 14:00:00] Task example_task_success completed successfully. Result: 8
+[INFO - 2025-01-02 14:00:00] Executing task: example_task_failure with args (5, 0) and kwargs {}
+[ERROR - 2025-01-02 14:00:00] Task example_task_failure failed with error: division by zero
+[ERROR - 2025-01-02 14:00:00] Debugging error: division by zero
+[ERROR - 2025-01-02 14:00:00] Stack trace:
+Traceback (most recent call last):
+  ...
+[ERROR - 2025-01-02 14:00:00] Suggestion: Verify that operations are performed on compatible data types.
+[INFO - 2025-01-02 14:00:00] Attempting to recover from the error...
+[ERROR - 2025-01-02 14:00:00] Recovery attempt failed: division by zero
