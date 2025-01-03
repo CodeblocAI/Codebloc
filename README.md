@@ -1,4 +1,2 @@
 # Codebloc
-![image](https://github.com/user-attachments/assets/014df7a4-e683-40a7-8d81-1f9e06a7a01a)
-
-
+![image](https://github.com/user-attachments/assets/4e152799-e1fa-49c6-a1ac-039614712dac)
